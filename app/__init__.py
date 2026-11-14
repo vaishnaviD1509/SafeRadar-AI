@@ -4,7 +4,7 @@ import os
 from flask import Flask, render_template
 
 from app.config import config_by_name
-from app.extensions import csrf, db
+from app.extensions import csrf, db, login_manager
 
 
 def create_app(config_name=None):
@@ -21,15 +21,25 @@ def create_app(config_name=None):
 
     db.init_app(app)
     csrf.init_app(app)
+    login_manager.init_app(app)
 
+    # Importing the models registers the tables and the login user-loader.
+    from app import models  # noqa: F401
+    from app.cli import register_commands
     from app.routes import register_blueprints
+
     register_blueprints(app)
     register_error_handlers(app)
+    register_commands(app)
 
     return app
 
 
 def register_error_handlers(app):
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template("errors/403.html"), 403
+
     @app.errorhandler(404)
     def not_found(error):
         return render_template("errors/404.html"), 404

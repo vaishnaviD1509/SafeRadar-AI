@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | SafeRadar AI{% endblock %}
+
+{% block content %}
+<div class="card sr-card">
+  <div class="card-body p-4">
+    <h1 class="h3 fw-bold">Welcome, {{ current_user.full_name }}</h1>
+    <span class="badge sr-badge">{{ current_user.role }}</span>
+    <p class="mt-3 mb-2">You are logged in. The full dashboard (recent incidents, statistics, map preview and quick SOS) is built in Phase 3.</p>
+    <a href="{{ url_for('user.profile') }}" class="btn sr-btn">Manage profile and trusted contacts</a>
+  </div>
+</div>
+{% endblock %}

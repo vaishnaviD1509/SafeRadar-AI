@@ -1,0 +1,10 @@
+{# Renders one form field with a label and Bootstrap error styling. #}
+{% macro render_field(field) %}
+<div class="mb-3">
+  {{ field.label(class="form-label") }}
+  {{ field(class="form-control" ~ (" is-invalid" if field.errors else ""), **kwargs) }}
+  {% for error in field.errors %}
+    <div class="invalid-feedback">{{ error }}</div>
+  {% endfor %}
+</div>
+{% endmacro %}

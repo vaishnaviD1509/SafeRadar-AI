@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field %}
+{% block title %}Log in | SafeRadar AI{% endblock %}
+
+{% block content %}
+<div class="card sr-card sr-auth-card">
+  <div class="card-body p-4">
+    <h2 class="h4 fw-bold mb-3">Welcome back</h2>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ render_field(form.email, autocomplete="email") }}
+      {{ render_field(form.password, autocomplete="current-password") }}
+      <div class="form-check mb-3">
+        {{ form.remember(class="form-check-input") }}
+        {{ form.remember.label(class="form-check-label") }}
+      </div>
+      <button type="submit" class="btn sr-btn w-100">Log in</button>
+    </form>
+    <p class="text-center mt-3 mb-0">
+      New here? <a href="{{ url_for('auth.register') }}">Create an account</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

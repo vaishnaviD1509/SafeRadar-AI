@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Admin | SafeRadar AI{% endblock %}
+
+{% block content %}
+<h1 class="h3 fw-bold mb-3">Admin dashboard</h1>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card sr-card"><div class="card-body">
+      <div class="text-muted small">Registered users</div>
+      <div class="display-6 fw-bold">{{ stats.total_users }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card sr-card"><div class="card-body">
+      <div class="text-muted small">Administrators</div>
+      <div class="display-6 fw-bold">{{ stats.total_admins }}</div>
+    </div></div>
+  </div>
+</div>
+<p class="mt-4 text-muted">Report review and safety statistics are added in Phase 11.</p>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field %}
+{% block title %}Profile | SafeRadar AI{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card sr-card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3">Your profile</h2>
+        <p class="text-muted small">Email: {{ current_user.email }}</p>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          {{ render_field(form.full_name) }}
+          {{ render_field(form.phone) }}
+          <button type="submit" class="btn sr-btn">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card sr-card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold">Trusted contacts
+          <small class="text-muted fs-6">({{ contacts|length }} of {{ max_contacts }})</small>
+        </h2>
+        <p class="text-muted small">People you choose to share your location with during an emergency.</p>
+
+        {% if contacts %}
+          <ul class="list-group mb-4">
+            {% for contact in contacts %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ contact.name }}</strong>
+                  {% if contact.relationship_label %}<span class="text-muted">({{ contact.relationship_label }})</span>{% endif %}
+                  <br><small>{{ contact.phone }}</small>
+                </div>
+                <form method="post" action="{{ url_for('user.delete_contact', contact_id=contact.id) }}"
+                      onsubmit="return confirm('Remove this contact?');">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="mb-4">You have not added any trusted contacts yet.</p>
+        {% endif %}
+
+        {% if contacts|length < max_contacts %}
+          <h3 class="h6 fw-bold">Add a contact</h3>
+          <form method="post" action="{{ url_for('user.add_contact') }}" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {{ render_field(contact_form.contact_name) }}
+            {{ render_field(contact_form.contact_phone) }}
+            {{ render_field(contact_form.contact_relation) }}
+            <button type="submit" class="btn sr-btn">Add contact</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -17,7 +17,8 @@ class Config:
 
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", f"sqlite:///{BASE_DIR / 'instance' / 'saferadar.db'}"
+        "DATABASE_URL",
+        f"sqlite:///{(BASE_DIR / 'instance' / 'saferadar.db').as_posix()}",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -31,6 +32,9 @@ class Config:
     # Map defaults (centred on Kalaburagi, Karnataka)
     DEFAULT_MAP_CENTER = (17.3297, 76.8343)
     DEFAULT_MAP_ZOOM = 13
+
+    # Maximum trusted emergency contacts per user
+    MAX_TRUSTED_CONTACTS = 5
 
     # Routing service. The public OSRM demo server is for light use only.
     OSRM_BASE_URL = os.environ.get("OSRM_BASE_URL", "https://router.project-osrm.org")

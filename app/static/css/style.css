@@ -39,3 +39,15 @@ main { flex: 1; }
 .sr-btn:hover { background: #5b21b6; color: var(--sr-white); }
 
 .sr-footer { background: var(--sr-navy); color: #c9cde0; }
+
+.sr-navbar .nav-link { color: #dfe3f3; }
+.sr-navbar .nav-link:hover { color: var(--sr-pink); }
+
+.sr-btn-outline {
+  border: 1px solid var(--sr-pink);
+  color: var(--sr-pink);
+  background: transparent;
+}
+.sr-btn-outline:hover { background: var(--sr-pink); color: var(--sr-navy); }
+
+.sr-auth-card { max-width: 480px; margin: 1rem auto; }
