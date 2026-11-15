@@ -6,10 +6,12 @@ Privacy rules applied here:
   * Map coordinates are rounded to 3 decimals (about 110 m), so a marker shows
     the general area and not an exact doorstep.
 """
+from flask import current_app
 from sqlalchemy import func
 
 from app.extensions import db
 from app.models import CATEGORIES, IncidentReport, TrustedContact
+from app.services.risk import estimate_risk
 from app.utils.timeutils import to_local
 
 
@@ -72,9 +74,19 @@ def get_map_markers(limit=200):
 
 
 def get_current_risk():
-    """Current risk estimate for the user's area.
+    """Risk estimate for the map centre at the current local time.
 
-    Returns None until the ML model exists (Phase 6). 'None' means UNKNOWN,
-    never 'safe': the dashboard says so instead of inventing a number.
+    Returns None when no model has been trained, so the dashboard says "No estimate yet".
+    When a model exists but has too little data for the map centre, the result has
+    level None and a message: unknown is never turned into "Low" or "safe".
     """
-    return None
+    lat, lon = current_app.config["DEFAULT_MAP_CENTER"]
+    result = estimate_risk(lat, lon)
+    if result is None:
+        return None
+    return {
+        "level": result["level"],
+        "slot": result["slot"],
+        "message": result["message"],
+        "synthetic": result["synthetic"],
+    }

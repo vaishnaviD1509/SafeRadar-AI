@@ -3,6 +3,7 @@
 
 def register_blueprints(app):
     from app.routes.admin import admin_bp
+    from app.routes.api import api_bp
     from app.routes.auth import auth_bp
     from app.routes.features import features_bp
     from app.routes.main import main_bp
@@ -15,3 +16,4 @@ def register_blueprints(app):
     app.register_blueprint(reports_bp)
     app.register_blueprint(features_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(api_bp)

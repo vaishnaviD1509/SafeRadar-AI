@@ -86,8 +86,21 @@
     <div class="card sr-card mb-4">
       <div class="card-body p-4">
         <h2 class="h5 fw-bold">Current risk</h2>
-        {% if risk %}
-          <span class="sr-risk-pill">{{ risk.level }}</span>
+        {% if risk and risk.level %}
+          <span class="sr-risk-pill">{{ risk.level }} risk</span>
+          <p class="small mt-3 mb-1">
+            Estimate for the map centre &middot; {{ risk.slot }} time slot
+            {% if risk.synthetic %}<span class="badge text-bg-secondary ms-1">Model trained on synthetic demo data</span>{% endif %}
+          </p>
+          <p class="small text-muted mb-0">
+            A model estimate, not a guarantee of safety. Levels compare places and times within the
+            training data, so <strong>Low does not mean safe</strong>.
+          </p>
+        {% elif risk %}
+          <span class="sr-risk-pill sr-risk-unknown">No estimate here</span>
+          <p class="small text-muted mt-3 mb-0">
+            {{ risk.message }} <strong>Unknown does not mean safe.</strong>
+          </p>
         {% else %}
           <span class="sr-risk-pill sr-risk-unknown">No estimate yet</span>
           <p class="small text-muted mt-3 mb-0">
