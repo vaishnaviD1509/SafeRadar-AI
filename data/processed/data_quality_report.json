@@ -1,0 +1,29 @@
+{
+  "rows_in": 1530,
+  "rows_out": 1381,
+  "rows_dropped": 149,
+  "dropped_by_reason": {
+    "missing_or_invalid_description": 30,
+    "missing_or_unknown_category": 16,
+    "missing_or_invalid_coordinates": 22,
+    "outside_study_area": 15,
+    "invalid_severity": 22,
+    "invalid_or_future_time": 15,
+    "duplicate": 29
+  },
+  "fixed": {
+    "category_text_fixed": 30
+  },
+  "missing_values_before": {
+    "description": 15,
+    "category": 0,
+    "severity": 8,
+    "latitude": 9,
+    "longitude": 13,
+    "incident_time": 0,
+    "is_synthetic": 0
+  },
+  "all_rows_synthetic": true,
+  "generated_rows_before_defects": 1500,
+  "note": "All data is SYNTHETIC. It was generated for development and is not real."
+}

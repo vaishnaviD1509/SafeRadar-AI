@@ -1,0 +1,44 @@
+{
+  "rows": 1381,
+  "date_from": "2025-12-20",
+  "date_to": "2026-11-14",
+  "all_synthetic": true,
+  "category_counts": {
+    "Harassment": 467,
+    "Stalking": 339,
+    "Threats": 241,
+    "Unsafe surroundings": 334
+  },
+  "severity_counts": {
+    "1": 99,
+    "2": 350,
+    "3": 524,
+    "4": 307,
+    "5": 101
+  },
+  "severity_mean": 2.97,
+  "zone_counts": {
+    "Demo Zone 1 - Market area": 295,
+    "Demo Zone 2 - Bus stand area": 231,
+    "Demo Zone 3 - Railway area": 206,
+    "Demo Zone 4 - College area": 161,
+    "Demo Zone 7 - Ring road outskirts": 141,
+    "Demo Zone 5 - Residential area": 124,
+    "Demo Zone 8 - Commercial street": 118,
+    "Demo Zone 6 - Park and lake side": 105
+  },
+  "zone_mean_severity": {
+    "Demo Zone 7 - Ring road outskirts": 3.44,
+    "Demo Zone 3 - Railway area": 3.39,
+    "Demo Zone 2 - Bus stand area": 3.11,
+    "Demo Zone 8 - Commercial street": 2.8,
+    "Demo Zone 6 - Park and lake side": 2.78,
+    "Demo Zone 4 - College area": 2.78,
+    "Demo Zone 5 - Residential area": 2.73,
+    "Demo Zone 1 - Market area": 2.69
+  },
+  "peak_hour": 19,
+  "night_share_pct": 28.9,
+  "weekend_share_pct": 28.5,
+  "busiest_weekday": "Saturday"
+}
