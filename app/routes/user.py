@@ -4,6 +4,9 @@ from flask_login import current_user, login_required
 from app.extensions import db
 from app.forms.user import ContactForm, ProfileForm
 from app.models import TrustedContact
+from app.services.stats import (
+    get_current_risk, get_dashboard_stats, get_map_markers, get_recent_incidents,
+)
 
 user_bp = Blueprint("user", __name__)
 
@@ -11,8 +14,16 @@ user_bp = Blueprint("user", __name__)
 @user_bp.route("/dashboard")
 @login_required
 def dashboard():
-    # Placeholder. The full dashboard is built in Phase 3.
-    return render_template("user/dashboard.html")
+    return render_template(
+        "user/dashboard.html",
+        stats=get_dashboard_stats(current_user),
+        recent=get_recent_incidents(),
+        markers=get_map_markers(),
+        risk=get_current_risk(),
+        map_center=current_app.config["DEFAULT_MAP_CENTER"],
+        map_zoom=current_app.config["DEFAULT_MAP_ZOOM"],
+        max_contacts=current_app.config["MAX_TRUSTED_CONTACTS"],
+    )
 
 
 @user_bp.route("/profile", methods=["GET", "POST"])

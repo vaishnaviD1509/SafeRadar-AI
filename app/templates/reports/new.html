@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field %}
+{% block title %}Report an incident | SafeRadar AI{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1 class="h3 fw-bold mb-1">Report an incident</h1>
+  <p class="text-muted mb-0">
+    Your report helps other women make safer choices. It is reviewed before it appears,
+    and it is shown without your name.
+  </p>
+</div>
+
+<div class="row g-4">
+  <!-- Map: shown first on phones, on the right on large screens -->
+  <div class="col-lg-5 order-1 order-lg-2">
+    <div class="card sr-card">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold">1. Where did it happen?</h2>
+        <p class="small text-muted">Click the map to place a pin, or use your current location.</p>
+
+        <div id="pick-map" class="sr-map sr-pick-map"
+             data-center='{{ map_center|tojson }}'
+             data-zoom="{{ map_zoom }}"
+             data-lat="{{ form.latitude.data or '' }}"
+             data-lng="{{ form.longitude.data or '' }}"></div>
+
+        <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+          <button type="button" id="use-location" class="btn btn-sm sr-btn-outline-dark">
+            <i class="bi bi-crosshair"></i> Use my current location
+          </button>
+          <span id="pick-status" class="small text-muted">No location chosen yet.</span>
+        </div>
+
+        <div id="pick-errors">
+          {% for error in (form.latitude.errors + form.longitude.errors)|unique %}
+            <div class="text-danger small mt-2">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="col-lg-7 order-2 order-lg-1">
+    <div class="card sr-card">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3">2. Tell us about it</h2>
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+
+          {{ render_field(form.description, rows=6, maxlength=2000,
+                          placeholder="Describe what happened in your own words.") }}
+          <div class="small text-muted text-end mb-3" style="margin-top: -0.5rem;">
+            <span id="char-count">0</span> / 2000
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ form.severity.label(class="form-label") }}
+              <select name="severity" id="severity"
+                      class="form-select{{ ' is-invalid' if form.severity.errors else '' }}">
+                {% for value, label in severity_choices %}
+                  <option value="{{ value }}" {{ 'selected' if form.severity.data == value }}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              {% for error in form.severity.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ render_field(form.incident_time, max=now_local) }}
+            </div>
+          </div>
+
+          {{ render_field(form.place_name, placeholder="For example: Central Bus Stand") }}
+          <p class="small text-muted" style="margin-top: -0.5rem;">
+            Use a public landmark, not your home address.
+          </p>
+
+          <div class="form-check mb-3">
+            {{ form.confirm(class="form-check-input" ~ (" is-invalid" if form.confirm.errors else "")) }}
+            {{ form.confirm.label(class="form-check-label") }}
+            {% for error in form.confirm.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="submit" class="btn sr-btn">Submit report</button>
+            <a href="{{ url_for('reports.my_reports') }}" class="btn sr-btn-outline-dark">My reports</a>
+          </div>
+          <p class="small text-muted mt-3 mb-0">
+            You can submit up to {{ limit }} reports per day ({{ remaining }} left today).
+            If you are in danger right now, call <strong>112</strong>.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
+{% endblock %}

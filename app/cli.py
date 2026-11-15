@@ -1,8 +1,13 @@
-"""Custom commands:  flask --app run init-db   and   flask --app run create-admin"""
+"""Custom commands:
+    flask --app run init-db
+    flask --app run create-admin
+    flask --app run review-report <id> approved|rejected|pending
+"""
 import click
 
 from app.extensions import db
-from app.models import Admin, User
+from app.models import Admin, IncidentReport, User
+from app.models.base import utcnow
 
 
 def register_commands(app):
@@ -33,3 +38,18 @@ def register_commands(app):
             user.admin_profile = Admin()
         db.session.commit()
         click.echo(f"Admin ready: {email}")
+
+    @app.cli.command("review-report")
+    @click.argument("report_id", type=int)
+    @click.argument("decision", type=click.Choice(["approved", "rejected", "pending"]))
+    def review_report(report_id, decision):
+        """Approve or reject a report. A temporary tool until the admin
+        dashboard (Phase 11) lets administrators do this in the browser."""
+        report = db.session.get(IncidentReport, report_id)
+        if report is None:
+            raise click.ClickException(f"No report with id {report_id}.")
+
+        report.status = decision
+        report.reviewed_at = None if decision == "pending" else utcnow()
+        db.session.commit()
+        click.echo(f"Report {report_id} is now {decision}.")

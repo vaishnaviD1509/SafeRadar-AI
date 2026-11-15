@@ -36,6 +36,14 @@ class Config:
     # Maximum trusted emergency contacts per user
     MAX_TRUSTED_CONTACTS = 5
 
+    # Incident reporting limits (Phase 4)
+    MAX_REPORTS_PER_DAY = 5          # stops spam from one account
+    REPORT_MAX_AGE_DAYS = 365        # older incidents cannot be reported
+
+    # Times are stored in UTC. Users type local time, which is converted using
+    # this fixed offset. 330 minutes = India Standard Time (UTC+05:30, no daylight saving).
+    LOCAL_UTC_OFFSET_MINUTES = 330
+
     # Routing service. The public OSRM demo server is for light use only.
     OSRM_BASE_URL = os.environ.get("OSRM_BASE_URL", "https://router.project-osrm.org")
 

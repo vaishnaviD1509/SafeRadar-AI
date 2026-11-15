@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | SafeRadar AI{% endblock %}
+
+{% block content %}
+<div class="card sr-card sr-auth-card text-center">
+  <div class="card-body p-5">
+    <div class="sr-feature-icon mx-auto mb-3"><i class="bi bi-hourglass-split"></i></div>
+    <h1 class="h4 fw-bold">{{ title }}</h1>
+    <p class="text-muted">{{ description }}</p>
+    <span class="badge sr-badge mb-3">Coming in Phase {{ phase }}</span>
+    <div><a href="{{ url_for('user.dashboard') }}" class="btn sr-btn">Back to dashboard</a></div>
+  </div>
+</div>
+{% endblock %}
