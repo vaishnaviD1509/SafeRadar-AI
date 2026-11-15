@@ -19,7 +19,15 @@
         <div class="sr-report-item">
           <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
             <div>
-              <strong>{{ item.category or "Awaiting classification" }}</strong>
+              {% if item.category %}
+                <strong>{{ item.category }}</strong>
+                <span class="badge text-bg-light border ms-1"
+                      title="Chosen automatically. An administrator confirms it.">
+                  Suggested{% if item.confidence is not none %} &middot; {{ item.confidence }}% sure{% endif %}
+                </span>
+              {% else %}
+                <strong>Awaiting classification</strong>
+              {% endif %}
               <span class="badge sr-badge ms-1">Severity {{ item.severity }}/5</span>
             </div>
             {% if item.status == "approved" %}

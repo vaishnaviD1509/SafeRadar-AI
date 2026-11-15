@@ -1,0 +1,504 @@
+{
+  "info": {
+    "created_at_utc": "2026-11-15 17:34:03",
+    "trained_on_synthetic_data": true,
+    "data_note": "Trained on SYNTHETIC text built from a small set of sentence templates. Scores show how well the model copes with these templates, not how it would perform on real reports.",
+    "rows": 1381,
+    "distinct_templates": 19,
+    "category_counts": {
+      "Harassment": 467,
+      "Stalking": 339,
+      "Threats": 241,
+      "Unsafe surroundings": 334
+    },
+    "vocabulary_size": 445,
+    "min_confidence": 0.5,
+    "min_known_words": 2,
+    "folds": 5,
+    "sklearn_version": "1.9.1",
+    "model_choice": "Logistic Regression is the main model, chosen before testing with fixed settings (nothing was tuned on the test data). The cross-validation scores describe this same method; the saved model is trained on every row.",
+    "top_terms": {
+      "Harassment": [
+        "touch without",
+        "touch",
+        "crowd",
+        "crowd near",
+        "permiss crowd",
+        "man touch",
+        "boy near",
+        "boy"
+      ],
+      "Stalking": [
+        "follow",
+        "permiss near",
+        "kept take",
+        "take",
+        "take photo",
+        "photo",
+        "photo without",
+        "stop"
+      ],
+      "Threats": [
+        "threat",
+        "man",
+        "told not",
+        "come",
+        "threat near",
+        "not come",
+        "shout threat",
+        "told"
+      ],
+      "Unsafe surroundings": [
+        "no",
+        "dark",
+        "light",
+        "peopl",
+        "drunk peopl",
+        "stand dark",
+        "peopl stand",
+        "no peopl"
+      ]
+    }
+  },
+  "metrics": {
+    "grouped_cross_validation": {
+      "majority_baseline": {
+        "accuracy": 0.3382,
+        "macro_f1": 0.1264,
+        "per_category": {
+          "Harassment": {
+            "precision": 0.3382,
+            "recall": 1.0,
+            "f1": 0.5054,
+            "support": 467
+          },
+          "Stalking": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 339
+          },
+          "Threats": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 241
+          },
+          "Unsafe surroundings": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 334
+          }
+        },
+        "confusion_matrix": [
+          [
+            467,
+            0,
+            0,
+            0
+          ],
+          [
+            339,
+            0,
+            0,
+            0
+          ],
+          [
+            241,
+            0,
+            0,
+            0
+          ],
+          [
+            334,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "naive_bayes": {
+        "accuracy": 0.4156,
+        "macro_f1": 0.4384,
+        "per_category": {
+          "Harassment": {
+            "precision": 0.3453,
+            "recall": 0.3084,
+            "f1": 0.3258,
+            "support": 467
+          },
+          "Stalking": {
+            "precision": 0.2047,
+            "recall": 0.233,
+            "f1": 0.2179,
+            "support": 339
+          },
+          "Threats": {
+            "precision": 0.525,
+            "recall": 0.61,
+            "f1": 0.5643,
+            "support": 241
+          },
+          "Unsafe surroundings": {
+            "precision": 0.6846,
+            "recall": 0.6108,
+            "f1": 0.6456,
+            "support": 334
+          }
+        },
+        "confusion_matrix": [
+          [
+            144,
+            227,
+            81,
+            15
+          ],
+          [
+            189,
+            79,
+            0,
+            71
+          ],
+          [
+            84,
+            2,
+            147,
+            8
+          ],
+          [
+            0,
+            78,
+            52,
+            204
+          ]
+        ],
+        "fold_macro_f1": [
+          0.5637,
+          0.351,
+          0.5314,
+          0.2072,
+          0.3073
+        ]
+      },
+      "logistic_regression": {
+        "accuracy": 0.3954,
+        "macro_f1": 0.4128,
+        "per_category": {
+          "Harassment": {
+            "precision": 0.289,
+            "recall": 0.1863,
+            "f1": 0.2266,
+            "support": 467
+          },
+          "Stalking": {
+            "precision": 0.2523,
+            "recall": 0.4012,
+            "f1": 0.3098,
+            "support": 339
+          },
+          "Threats": {
+            "precision": 0.6115,
+            "recall": 0.3983,
+            "f1": 0.4824,
+            "support": 241
+          },
+          "Unsafe surroundings": {
+            "precision": 0.5911,
+            "recall": 0.6796,
+            "f1": 0.6323,
+            "support": 334
+          }
+        },
+        "confusion_matrix": [
+          [
+            87,
+            325,
+            30,
+            25
+          ],
+          [
+            132,
+            136,
+            0,
+            71
+          ],
+          [
+            82,
+            2,
+            96,
+            61
+          ],
+          [
+            0,
+            76,
+            31,
+            227
+          ]
+        ],
+        "fold_macro_f1": [
+          0.5794,
+          0.3102,
+          0.3945,
+          0.1034,
+          0.4003
+        ]
+      }
+    },
+    "random_split_inflated": {
+      "naive_bayes": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_category": {
+          "Harassment": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 117
+          },
+          "Stalking": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 85
+          },
+          "Threats": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 60
+          },
+          "Unsafe surroundings": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 84
+          }
+        },
+        "confusion_matrix": [
+          [
+            117,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            85,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            60,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            84
+          ]
+        ]
+      },
+      "logistic_regression": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "per_category": {
+          "Harassment": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 117
+          },
+          "Stalking": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 85
+          },
+          "Threats": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 60
+          },
+          "Unsafe surroundings": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 84
+          }
+        },
+        "confusion_matrix": [
+          [
+            117,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            85,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            60,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            84
+          ]
+        ]
+      }
+    },
+    "confidence_table": [
+      {
+        "min_confidence": 0.0,
+        "share_suggested": 1.0,
+        "accuracy_when_suggested": 0.3954
+      },
+      {
+        "min_confidence": 0.4,
+        "share_suggested": 0.714,
+        "accuracy_when_suggested": 0.4006
+      },
+      {
+        "min_confidence": 0.5,
+        "share_suggested": 0.5076,
+        "accuracy_when_suggested": 0.3909
+      },
+      {
+        "min_confidence": 0.6,
+        "share_suggested": 0.3599,
+        "accuracy_when_suggested": 0.33
+      },
+      {
+        "min_confidence": 0.7,
+        "share_suggested": 0.1463,
+        "accuracy_when_suggested": 0.302
+      },
+      {
+        "min_confidence": 0.8,
+        "share_suggested": 0.0275,
+        "accuracy_when_suggested": 0.6053
+      }
+    ],
+    "hand_written_check": {
+      "accuracy": 0.75,
+      "macro_f1": 0.7503,
+      "per_category": {
+        "Harassment": {
+          "precision": 0.75,
+          "recall": 0.75,
+          "f1": 0.75,
+          "support": 8
+        },
+        "Stalking": {
+          "precision": 0.6364,
+          "recall": 0.875,
+          "f1": 0.7368,
+          "support": 8
+        },
+        "Threats": {
+          "precision": 0.8333,
+          "recall": 0.625,
+          "f1": 0.7143,
+          "support": 8
+        },
+        "Unsafe surroundings": {
+          "precision": 0.8571,
+          "recall": 0.75,
+          "f1": 0.8,
+          "support": 8
+        }
+      },
+      "confusion_matrix": [
+        [
+          6,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          5,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          6
+        ]
+      ],
+      "note": "32 hand-written sentences in wording different from the templates. Too few for a reliable accuracy; labels are the writer's own reading.",
+      "sentences": 32,
+      "suggested_at_threshold": 26,
+      "wrong": [
+        {
+          "text": "He grabbed my hand in the queue and laughed when I pulled away.",
+          "truth": "Harassment",
+          "predicted": "Stalking",
+          "confidence": 0.302
+        },
+        {
+          "text": "A man sitting next to me in the auto kept staring and making kissing sounds.",
+          "truth": "Harassment",
+          "predicted": "Stalking",
+          "confidence": 0.567
+        },
+        {
+          "text": "The same man has been trailing me on my way to office all this week.",
+          "truth": "Stalking",
+          "predicted": "Threats",
+          "confidence": 0.799
+        },
+        {
+          "text": "A drunk man raised his fist and said he would beat me up if I did not move.",
+          "truth": "Threats",
+          "predicted": "Unsafe surroundings",
+          "confidence": 0.564
+        },
+        {
+          "text": "A man yelled abuse and promised to teach me a lesson near the bus stop.",
+          "truth": "Threats",
+          "predicted": "Stalking",
+          "confidence": 0.417
+        },
+        {
+          "text": "They said they would break my phone and hit me if I reported them.",
+          "truth": "Threats",
+          "predicted": "Harassment",
+          "confidence": 0.66
+        },
+        {
+          "text": "The bus shelter has a broken bulb and a group of men sit there drinking every night.",
+          "truth": "Unsafe surroundings",
+          "predicted": "Harassment",
+          "confidence": 0.738
+        },
+        {
+          "text": "The alley is narrow, unlit and full of garbage, I avoid it after sunset.",
+          "truth": "Unsafe surroundings",
+          "predicted": "Stalking",
+          "confidence": 0.302
+        }
+      ]
+    }
+  }
+}
