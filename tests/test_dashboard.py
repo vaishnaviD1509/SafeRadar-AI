@@ -122,10 +122,18 @@ def test_placeholder_pages_require_login(client):
         assert "/login" in response.headers["Location"]
 
 
-def test_placeholder_pages_open_when_logged_in(client):
+def test_remaining_placeholder_pages_open_when_logged_in(client):
     logged_in_client(client)
-    expected = {"/heatmap": b"Phase 8", "/routes": b"Phase 9", "/sos": b"Phase 10"}
+    expected = {"/routes": b"Phase 9", "/sos": b"Phase 10"}
     for path, phase in expected.items():
         response = client.get(path)
         assert response.status_code == 200, path
         assert phase in response.data
+
+
+def test_heatmap_is_a_real_page(client):
+    logged_in_client(client)
+    response = client.get("/heatmap")
+    assert response.status_code == 200
+    assert b'id="heatmap"' in response.data
+    assert b"Coming in Phase" not in response.data

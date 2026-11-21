@@ -1,12 +1,15 @@
-"""Placeholder pages for features built in later phases.
+"""Feature pages.
 
-They exist so the dashboard buttons and the navigation bar work.
-Each one is replaced by the real page in its own phase:
-    /heatmap -> Phase 8    /routes -> Phase 9    /sos -> Phase 10
+/heatmap is real (Phase 8). The others are still placeholders:
+    /routes -> Phase 9    /sos -> Phase 10
 (The report page became real in Phase 4: see routes/reports.py.)
 """
-from flask import Blueprint, render_template
+from flask import Blueprint, current_app, render_template
 from flask_login import login_required
+
+from app.ml.risk_dataset import SLOT_HOURS, SLOT_NAMES
+from app.services.heatmap import current_slot_and_day, get_heatmap_markers
+from app.services.risk import get_model_info
 
 features_bp = Blueprint("features", __name__)
 
@@ -20,9 +23,17 @@ def coming_soon(title, phase, description):
 @features_bp.route("/heatmap")
 @login_required
 def heatmap():
-    return coming_soon(
-        "Safety heatmap", 8,
-        "An interactive map showing estimated risk levels and incident markers.",
+    slot, weekend = current_slot_and_day()
+    return render_template(
+        "features/heatmap.html",
+        markers=get_heatmap_markers(),
+        model_ready=get_model_info() is not None,
+        slot=slot,
+        weekend=weekend,
+        slot_names=SLOT_NAMES,
+        slot_hours=SLOT_HOURS,
+        map_center=current_app.config["DEFAULT_MAP_CENTER"],
+        map_zoom=current_app.config["DEFAULT_MAP_ZOOM"],
     )
 
 
