@@ -1,7 +1,7 @@
 """Feature pages.
 
-/heatmap is real (Phase 8). The others are still placeholders:
-    /routes -> Phase 9    /sos -> Phase 10
+/heatmap (Phase 8) and /routes (Phase 9) are real. The last placeholder:
+    /sos -> Phase 10
 (The report page became real in Phase 4: see routes/reports.py.)
 """
 from flask import Blueprint, current_app, render_template
@@ -10,6 +10,7 @@ from flask_login import login_required
 from app.ml.risk_dataset import SLOT_HOURS, SLOT_NAMES
 from app.services.heatmap import current_slot_and_day, get_heatmap_markers
 from app.services.risk import get_model_info
+from app.utils.timeutils import local_now
 
 features_bp = Blueprint("features", __name__)
 
@@ -40,9 +41,13 @@ def heatmap():
 @features_bp.route("/routes")
 @login_required
 def route_planner():
-    return coming_soon(
-        "Safer route planner", 9,
-        "Compare routes between two places by estimated risk, not only by distance.",
+    now = local_now().replace(second=0, microsecond=0)
+    return render_template(
+        "features/route_planner.html",
+        model_ready=get_model_info() is not None,
+        now_local=now.strftime("%Y-%m-%dT%H:%M"),
+        map_center=current_app.config["DEFAULT_MAP_CENTER"],
+        map_zoom=current_app.config["DEFAULT_MAP_ZOOM"],
     )
 
 

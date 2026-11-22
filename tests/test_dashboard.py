@@ -113,7 +113,7 @@ def test_dashboard_shows_location_name(client):
     assert b"Central Bus Stand" in client.get("/dashboard").data
 
 
-# ---------- placeholder pages ----------
+# ---------- feature pages ----------
 
 def test_placeholder_pages_require_login(client):
     for path in ("/heatmap", "/routes", "/sos"):
@@ -122,13 +122,11 @@ def test_placeholder_pages_require_login(client):
         assert "/login" in response.headers["Location"]
 
 
-def test_remaining_placeholder_pages_open_when_logged_in(client):
+def test_remaining_placeholder_page_opens_when_logged_in(client):
     logged_in_client(client)
-    expected = {"/routes": b"Phase 9", "/sos": b"Phase 10"}
-    for path, phase in expected.items():
-        response = client.get(path)
-        assert response.status_code == 200, path
-        assert phase in response.data
+    response = client.get("/sos")
+    assert response.status_code == 200
+    assert b"Phase 10" in response.data
 
 
 def test_heatmap_is_a_real_page(client):
@@ -136,4 +134,12 @@ def test_heatmap_is_a_real_page(client):
     response = client.get("/heatmap")
     assert response.status_code == 200
     assert b'id="heatmap"' in response.data
+    assert b"Coming in Phase" not in response.data
+
+
+def test_route_planner_is_a_real_page(client):
+    logged_in_client(client)
+    response = client.get("/routes")
+    assert response.status_code == 200
+    assert b'id="route-map"' in response.data
     assert b"Coming in Phase" not in response.data

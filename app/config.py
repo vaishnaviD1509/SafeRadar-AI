@@ -44,8 +44,15 @@ class Config:
     # this fixed offset. 330 minutes = India Standard Time (UTC+05:30, no daylight saving).
     LOCAL_UTC_OFFSET_MINUTES = 330
 
-    # Routing service. The public OSRM demo server is for light use only.
+    # Routing service (Phase 9). The public OSRM demo server is for light use only and it
+    # offers CAR routes only, so times are driving times. For walking routes, use a server
+    # that has a foot profile and set both values in your .env file, for example:
+    #   OSRM_BASE_URL=https://routing.openstreetmap.de/routed-foot
+    #   OSRM_PROFILE=foot
+    # (That server is run by someone else: test it before you rely on it.)
     OSRM_BASE_URL = os.environ.get("OSRM_BASE_URL", "https://router.project-osrm.org")
+    OSRM_PROFILE = os.environ.get("OSRM_PROFILE", "driving")
+    OSRM_TIMEOUT_SECONDS = 8
 
     DEBUG = False
     TESTING = False
