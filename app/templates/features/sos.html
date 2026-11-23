@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Emergency SOS | SafeRadar AI{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1 class="h3 fw-bold mb-1">Emergency SOS</h1>
+  <p class="text-muted mb-0">Share your live location with the people you trust.</p>
+</div>
+
+<div class="card sr-card sr-sos-card mb-4">
+  <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <h2 class="h5 fw-bold mb-1">In an emergency, call 112 first</h2>
+      <p class="small mb-0">SafeRadar AI does not contact the police or any emergency service.</p>
+    </div>
+    <a href="tel:112" class="btn btn-lg sr-sos-btn"><i class="bi bi-telephone"></i> Call 112</a>
+  </div>
+</div>
+
+{% if local_only %}
+  <div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle"></i>
+    This app is running on your own computer, so people outside your own network cannot open the
+    link yet. Deploy the app, or set <code>PUBLIC_BASE_URL</code> in your <code>.env</code> file,
+    before you rely on it.
+  </div>
+{% endif %}
+
+<div class="card sr-card mb-4">
+  <div class="card-body p-4">
+    <h2 class="h5 fw-bold">How it works</h2>
+    <ol class="mb-2">
+      <li>Press <strong>Start SOS</strong> and allow your location when the browser asks.</li>
+      <li>You get a private link that shows your live location. Only your first name is shown.</li>
+      <li>Send the link to your contacts with the buttons that appear.
+        <strong>SafeRadar AI cannot send SMS or WhatsApp messages by itself</strong>: nothing reaches
+        anyone until you press send in your own messaging app.</li>
+      <li>The link stops showing your location when you stop sharing, and after
+        {{ "%g"|format(duration_hours) }} hours at the latest.</li>
+    </ol>
+    <p class="small text-muted mb-0">
+      Keep this page open while you share: phones usually stop sending location when the page is in the background.
+    </p>
+  </div>
+</div>
+
+<div id="sos-app"
+     data-csrf="{{ csrf_token() }}"
+     data-start-url="{{ url_for('sos.start') }}"
+     data-active='{{ active|tojson }}'>
+
+  <div id="sos-idle" class="card sr-card mb-4">
+    <div class="card-body p-4">
+      <h2 class="h5 fw-bold">Your trusted contacts</h2>
+      {% if contacts %}
+        <ul class="mb-3">
+          {% for contact in contacts %}
+            <li>{{ contact.name }}{% if contact.relationship_label %} <span class="text-muted">({{ contact.relationship_label }})</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-warning">
+          You have no trusted contacts yet. You can still start SOS and copy the link, but add contacts
+          so you can send it quickly.
+          <a href="{{ url_for('user.profile') }}">Add contacts</a>
+        </div>
+      {% endif %}
+      <button id="sos-start" type="button" class="btn btn-lg sr-sos-btn w-100">
+        <i class="bi bi-broadcast"></i> Start SOS and share my location
+      </button>
+      <p id="sos-status" class="small mt-3 mb-0" aria-live="polite"></p>
+      <noscript><p class="small text-danger mt-2 mb-0">SOS needs JavaScript. Call 112 instead.</p></noscript>
+    </div>
+  </div>
+
+  <div id="sos-active" class="card sr-card sr-sos-card mb-4" hidden>
+    <div class="card-body p-4">
+      <h2 class="h5 fw-bold"><i class="bi bi-broadcast"></i> SOS is on: your location is being shared</h2>
+      <p class="small">
+        Anyone with the link below can see your live location until you stop sharing<span id="sos-expires"></span>.
+        Keep this page open.
+      </p>
+
+      <label for="sos-link" class="form-label small mb-1">Your private link</label>
+      <div class="input-group mb-3">
+        <input id="sos-link" type="text" class="form-control sr-link-box" readonly>
+        <button id="sos-copy" type="button" class="btn sr-btn-outline-dark">Copy</button>
+      </div>
+
+      <h3 class="h6 fw-bold">Send the link to your contacts</h3>
+      <p class="small text-muted">
+        These buttons open your own messaging app with the message ready. Nothing is sent until you press
+        send there.
+      </p>
+      <div id="sos-contacts" class="mb-2"></div>
+      <button id="sos-native-share" type="button" class="btn btn-sm sr-btn-outline-dark mb-3" hidden>
+        Share with another app
+      </button>
+
+      <p id="sos-updated" class="small text-muted" aria-live="polite"></p>
+
+      <div class="d-flex flex-wrap gap-2">
+        <button id="sos-stop" type="button" class="btn sr-btn">I am safe: stop sharing</button>
+        <button id="sos-cancel" type="button" class="btn btn-outline-secondary">Started by mistake: cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/sos.js') }}"></script>
+{% endblock %}

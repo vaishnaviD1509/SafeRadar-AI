@@ -1,24 +1,18 @@
 """Feature pages.
 
-/heatmap (Phase 8) and /routes (Phase 9) are real. The last placeholder:
-    /sos -> Phase 10
-(The report page became real in Phase 4: see routes/reports.py.)
+/heatmap (Phase 8), /routes (Phase 9) and /sos (Phase 10) are all real now.
+The JSON endpoints behind SOS and the public share pages live in routes/sos.py.
 """
 from flask import Blueprint, current_app, render_template
-from flask_login import login_required
+from flask_login import current_user, login_required
 
 from app.ml.risk_dataset import SLOT_HOURS, SLOT_NAMES
 from app.services.heatmap import current_slot_and_day, get_heatmap_markers
 from app.services.risk import get_model_info
+from app.services.sos import alert_view, get_live_alert, is_local_address
 from app.utils.timeutils import local_now
 
 features_bp = Blueprint("features", __name__)
-
-
-def coming_soon(title, phase, description):
-    return render_template(
-        "features/coming_soon.html", title=title, phase=phase, description=description
-    )
 
 
 @features_bp.route("/heatmap")
@@ -54,7 +48,11 @@ def route_planner():
 @features_bp.route("/sos")
 @login_required
 def sos():
-    return coming_soon(
-        "Emergency SOS", 10,
-        "Capture your location and create a sharing link for your trusted contacts.",
+    alert = get_live_alert(current_user)
+    return render_template(
+        "features/sos.html",
+        active=alert_view(current_user, alert) if alert else None,
+        contacts=current_user.contacts,
+        local_only=is_local_address(),
+        duration_hours=current_app.config.get("SOS_DURATION_MINUTES", 240) / 60,
     )

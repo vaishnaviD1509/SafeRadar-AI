@@ -54,6 +54,13 @@ class Config:
     OSRM_PROFILE = os.environ.get("OSRM_PROFILE", "driving")
     OSRM_TIMEOUT_SECONDS = 8
 
+    # Emergency SOS (Phase 10)
+    SOS_DURATION_MINUTES = 240       # a share link stops showing a location after this long
+    SOS_MAX_PER_HOUR = 5             # stops accidental or abusive repeated alerts
+    # The address people outside your network can open, for example your deployed site or a
+    # tunnel address. Leave empty while the app only runs on your own computer.
+    PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "")
+
     DEBUG = False
     TESTING = False
 
@@ -69,6 +76,7 @@ class TestingConfig(Config):
     SECRET_KEY = "testing-key"
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     WTF_CSRF_ENABLED = False
+    PUBLIC_BASE_URL = ""             # tests never depend on your own .env file
 
 
 class ProductionConfig(Config):

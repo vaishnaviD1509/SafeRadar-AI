@@ -115,18 +115,11 @@ def test_dashboard_shows_location_name(client):
 
 # ---------- feature pages ----------
 
-def test_placeholder_pages_require_login(client):
+def test_feature_pages_require_login(client):
     for path in ("/heatmap", "/routes", "/sos"):
         response = client.get(path)
         assert response.status_code == 302, path
         assert "/login" in response.headers["Location"]
-
-
-def test_remaining_placeholder_page_opens_when_logged_in(client):
-    logged_in_client(client)
-    response = client.get("/sos")
-    assert response.status_code == 200
-    assert b"Phase 10" in response.data
 
 
 def test_heatmap_is_a_real_page(client):
@@ -142,4 +135,12 @@ def test_route_planner_is_a_real_page(client):
     response = client.get("/routes")
     assert response.status_code == 200
     assert b'id="route-map"' in response.data
+    assert b"Coming in Phase" not in response.data
+
+
+def test_sos_is_a_real_page(client):
+    logged_in_client(client)
+    response = client.get("/sos")
+    assert response.status_code == 200
+    assert b'id="sos-app"' in response.data
     assert b"Coming in Phase" not in response.data

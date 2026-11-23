@@ -1,0 +1,27 @@
+.sr-share-map {
+  height: 380px;
+  border-radius: 0.6rem;
+  background: #e9e6f3;
+}
+@media (max-width: 575.98px) { .sr-share-map { height: 300px; } }
+
+.sr-share-banner {
+  background: var(--sr-sos);
+  color: var(--sr-white);
+  border-radius: 0.9rem;
+  padding: 1.25rem 1.5rem;
+}
+.sr-share-banner.ended { background: var(--sr-navy); }
+
+.sr-contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sr-link-box {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.85rem;
+}

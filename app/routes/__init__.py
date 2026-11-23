@@ -8,6 +8,7 @@ def register_blueprints(app):
     from app.routes.features import features_bp
     from app.routes.main import main_bp
     from app.routes.reports import reports_bp
+    from app.routes.sos import share_bp, sos_bp
     from app.routes.user import user_bp
 
     app.register_blueprint(main_bp)
@@ -17,3 +18,5 @@ def register_blueprints(app):
     app.register_blueprint(features_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(api_bp)
+    app.register_blueprint(sos_bp)
+    app.register_blueprint(share_bp)
