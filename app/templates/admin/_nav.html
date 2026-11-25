@@ -1,0 +1,12 @@
+{% set ep = request.endpoint or '' %}
+<ul class="nav nav-pills sr-admin-nav mb-4">
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if ep == 'admin.dashboard' }}" href="{{ url_for('admin.dashboard') }}">Overview</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if ep in ('admin.reports', 'admin.report_detail') }}" href="{{ url_for('admin.reports') }}">Reports</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ 'active' if ep == 'admin.users' }}" href="{{ url_for('admin.users') }}">Users</a>
+  </li>
+</ul>

@@ -1,0 +1,6 @@
+.sr-admin-nav .nav-link { color: var(--sr-purple); }
+.sr-admin-nav .nav-link:hover { color: var(--sr-purple-dark); }
+.sr-admin-nav .nav-link.active {
+  background: var(--sr-purple);
+  color: var(--sr-white);
+}

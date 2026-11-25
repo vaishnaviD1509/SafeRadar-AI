@@ -1,21 +1,99 @@
 {% extends "base.html" %}
 {% block title %}Admin | SafeRadar AI{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
 {% block content %}
 <h1 class="h3 fw-bold mb-3">Admin dashboard</h1>
-<div class="row g-3">
-  <div class="col-md-4">
-    <div class="card sr-card"><div class="card-body">
-      <div class="text-muted small">Registered users</div>
-      <div class="display-6 fw-bold">{{ stats.total_users }}</div>
+{% include "admin/_nav.html" %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">Awaiting review</div>
+      <div class="sr-stat-value">{{ stats.reports.pending }}</div>
+      <div class="sr-stat-sub"><a href="{{ url_for('admin.reports', status='pending') }}">open the queue</a></div>
     </div></div>
   </div>
-  <div class="col-md-4">
-    <div class="card sr-card"><div class="card-body">
-      <div class="text-muted small">Administrators</div>
-      <div class="display-6 fw-bold">{{ stats.total_admins }}</div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">Need a category</div>
+      <div class="sr-stat-value">{{ stats.pending_uncategorised }}</div>
+      <div class="sr-stat-sub"><a href="{{ url_for('admin.reports', status='pending', needs_category=1) }}">pending, no category</a></div>
+    </div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">Approved reports</div>
+      <div class="sr-stat-value">{{ stats.reports.approved }}</div>
+      <div class="sr-stat-sub">{{ stats.reports.rejected }} rejected</div>
+    </div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">New in 7 days</div>
+      <div class="sr-stat-value">{{ stats.reports.new_7d }}</div>
+      <div class="sr-stat-sub">{{ stats.reports.reviewed_7d }} reviewed</div>
+    </div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">Users</div>
+      <div class="sr-stat-value">{{ stats.users.regular }}</div>
+      <div class="sr-stat-sub">{{ stats.users.active }} active, {{ stats.users.inactive }} deactivated &middot; <a href="{{ url_for('admin.users') }}">manage</a></div>
+    </div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">Administrators</div>
+      <div class="sr-stat-value">{{ stats.users.admins }}</div>
+      <div class="sr-stat-sub">created from the command line</div>
+    </div></div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card sr-card sr-stat h-100"><div class="card-body">
+      <div class="sr-stat-label">SOS alerts</div>
+      <div class="sr-stat-value">{{ stats.sos.total }}</div>
+      <div class="sr-stat-sub">{{ stats.sos.live }} live now</div>
     </div></div>
   </div>
 </div>
-<p class="mt-4 text-muted">Report review and safety statistics are added in Phase 11.</p>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card sr-card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3">Approved reports by category</h2>
+        {% for name, count in stats.by_category.items() %}
+          {% set pct = (count * 100 / stats.categorised_total)|round|int if stats.categorised_total else 0 %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small">
+              <span>{{ name }}</span><span>{{ count }}</span>
+            </div>
+            <progress class="sr-progress" max="100" value="{{ pct }}" aria-label="{{ name }}">{{ pct }}%</progress>
+          </div>
+        {% endfor %}
+        <p class="small text-muted mb-0">
+          Real reports only. Synthetic demo reports: {{ stats.reports.synthetic }} (not counted here).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card sr-card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold">Please remember</h2>
+        <ul class="small mb-0">
+          <li>Report text can contain sensitive personal details. You see reporters only as a number.</li>
+          <li>Approving a report needs a category, and approved reports appear on the maps for everyone.</li>
+          <li>Your name is recorded as the reviewer of every decision you make.</li>
+          <li>Live SOS locations are never shown on admin pages.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
