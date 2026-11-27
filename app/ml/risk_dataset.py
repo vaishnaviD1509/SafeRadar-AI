@@ -79,13 +79,13 @@ def add_cell_columns(df):
     out["col"] = np.floor((out["longitude"] - ORIGIN_LON) / GRID_SIZE_DEG).astype(int)
     out["cell_id"] = out["row"].astype(str) + "_" + out["col"].astype(str)
     out["slot"] = out["incident_time"].dt.hour.map(slot_of_hour).astype(int)
-    out["is_weekend"] = (out["incident_time"].dt.dayofweek >= 5).astype(int)
+    out["is_weekend"] = (out["incident_time"].dt.day_of_week >= 5).astype(int)
     return out
 
 
 def _day_counts(start, end_exclusive):
     days = pd.date_range(start, end_exclusive - pd.Timedelta(days=1), freq="D")
-    weekend = int((days.dayofweek >= 5).sum())
+    weekend = int((days.day_of_week >= 5).sum())
     return {0: len(days) - weekend, 1: weekend}
 
 

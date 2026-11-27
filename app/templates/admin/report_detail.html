@@ -68,7 +68,13 @@
         <form method="post" novalidate>
           {{ form.hidden_tag() }}
           <label for="category" class="form-label">Category</label>
-          {{ form.category(class="form-select mb-1" ~ (" is-invalid" if form.category.errors else "")) }}
+          <select name="category" id="category"
+                  class="form-select mb-1{{ ' is-invalid' if form.category.errors else '' }}">
+            <option value="">Not set</option>
+            {% for name in form.categories %}
+              <option value="{{ name }}" {{ 'selected' if form.category.data == name }}>{{ name }}</option>
+            {% endfor %}
+          </select>
           {% for error in form.category.errors %}
             <div class="invalid-feedback d-block">{{ error }}</div>
           {% endfor %}

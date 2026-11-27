@@ -3,6 +3,7 @@
     flask --app run create-admin
     flask --app run review-report <id> approved|rejected|pending
     flask --app run classify-reports
+    flask --app run purge-sos [--keep-days 30]
 """
 import click
 
@@ -11,6 +12,7 @@ from app.models import Admin, IncidentReport, User
 from app.models.base import utcnow
 from app.services.classifier import load_model
 from app.services.reports import apply_category
+from app.services.sos import purge_old_alerts
 
 
 def register_commands(app):
@@ -46,8 +48,8 @@ def register_commands(app):
     @click.argument("report_id", type=int)
     @click.argument("decision", type=click.Choice(["approved", "rejected", "pending"]))
     def review_report(report_id, decision):
-        """Approve or reject a report. A temporary tool until the admin
-        dashboard (Phase 11) lets administrators do this in the browser."""
+        """Approve or reject a report from the command line. Administrators normally do this
+        in the browser (Admin > Reports); this command is kept as a backup."""
         report = db.session.get(IncidentReport, report_id)
         if report is None:
             raise click.ClickException(f"No report with id {report_id}.")
@@ -80,3 +82,18 @@ def register_commands(app):
         db.session.commit()
         click.echo(f"Checked {len(reports)} reports without a category: "
                    f"{suggested} got a suggestion, {uncertain} left for an administrator.")
+
+    @app.cli.command("purge-sos")
+    @click.option("--keep-days", default=30, show_default=True, type=int,
+                  help="Delete alerts that ended or expired more than this many days ago.")
+    def purge_sos(keep_days):
+        """Erase the saved location of ended or expired SOS alerts and delete old ones.
+
+        Live alerts are never touched. Run this now and then; it is safe to run again.
+        """
+        try:
+            erased, deleted = purge_old_alerts(keep_days)
+        except ValueError as error:
+            raise click.ClickException(str(error))
+        click.echo(f"Erased the location of {erased} alerts and deleted {deleted} alerts "
+                   f"older than {keep_days} days.")

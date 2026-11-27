@@ -123,7 +123,7 @@ def clean_incidents(raw, reference_time=None):
     # Features that the next phases use.
     df["date"] = df["incident_time"].dt.strftime("%Y-%m-%d")
     df["hour"] = df["incident_time"].dt.hour
-    df["day_of_week"] = df["incident_time"].dt.dayofweek
+    df["day_of_week"] = df["incident_time"].dt.day_of_week
     df["day_name"] = df["incident_time"].dt.day_name()
     df["month"] = df["incident_time"].dt.month
     df["is_weekend"] = df["day_of_week"] >= 5

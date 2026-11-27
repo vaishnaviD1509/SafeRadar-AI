@@ -21,10 +21,12 @@
             <div>
               {% if item.category %}
                 <strong>{{ item.category }}</strong>
-                <span class="badge text-bg-light border ms-1"
-                      title="Chosen automatically. An administrator confirms it.">
-                  Suggested{% if item.confidence is not none %} &middot; {{ item.confidence }}% sure{% endif %}
-                </span>
+                {% if item.status != "approved" %}
+                  <span class="badge text-bg-light border ms-1"
+                        title="Chosen automatically. An administrator checks it before the report appears.">
+                    Suggested
+                  </span>
+                {% endif %}
               {% else %}
                 <strong>Awaiting classification</strong>
               {% endif %}

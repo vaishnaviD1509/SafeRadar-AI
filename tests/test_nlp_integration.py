@@ -92,7 +92,7 @@ def test_my_reports_labels_the_category_as_a_suggestion(client, app, with_classi
     page = client.get("/my-reports").data
     assert b"Stalking" in page
     assert b"Suggested" in page
-    assert b"% sure" in page
+    assert b"% sure" not in page
 
 
 def test_my_reports_says_awaiting_when_there_is_no_category(client, app):

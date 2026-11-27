@@ -185,7 +185,7 @@ def test_derived_time_features(cleaned):
     clean, _ = cleaned
     row = clean.iloc[0]
     assert row["hour"] == row["incident_time"].hour
-    assert row["day_of_week"] == row["incident_time"].dayofweek
+    assert row["day_of_week"] == row["incident_time"].day_of_week
     assert row["is_weekend"] == (row["day_of_week"] >= 5)
     night = (clean["hour"] >= 21) | (clean["hour"] < 5)
     assert (clean["is_night"] == night).all()

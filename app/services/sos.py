@@ -14,6 +14,8 @@ Privacy
 * Only the latest position is kept, not a trail.
 * The public view shows the first name only, and no location once the alert has ended or
   expired.
+* When an alert ends, its saved location is erased (set to 0, 0). Expired alerts are erased
+  and old alerts are deleted by purge_old_alerts() (the "flask purge-sos" command).
 * Alerts expire by themselves (SOS_DURATION_MINUTES, 4 hours by default).
 """
 import math
@@ -99,6 +101,19 @@ def _move(alert, lat, lon, accuracy):
     alert.updated_at = utcnow()           # set by hand: identical coordinates still count as an update
 
 
+def _scrub(alert):
+    """Erase the saved location (the columns can not be empty, so 0, 0 means 'erased').
+
+    Returns True if something was erased, False if it had been erased already.
+    """
+    if alert.latitude == 0.0 and alert.longitude == 0.0 and alert.accuracy_m is None:
+        return False
+    alert.latitude = 0.0
+    alert.longitude = 0.0
+    alert.accuracy_m = None
+    return True
+
+
 def start_alert(user, latitude, longitude, accuracy=None):
     """Start an SOS and return (alert, created).
 
@@ -141,14 +156,37 @@ def update_location(alert, latitude, longitude, accuracy=None):
 
 
 def end_alert(alert, status="resolved"):
-    """Stop sharing. An alert that has already ended is left exactly as it was."""
+    """Stop sharing and erase the saved location. An alert that has already ended is left alone."""
     if status not in ENDED_STATUSES:
         raise ValueError("status must be 'resolved' or 'cancelled'.")
     if alert.status == "active":
         alert.status = status
         alert.resolved_at = utcnow()
+        _scrub(alert)
         db.session.commit()
     return alert
+
+
+def purge_old_alerts(keep_days=30):
+    """Erase the saved location of every alert that is no longer live, and delete old alerts.
+
+    An alert that is not live has ended or expired. Alerts that are still live are never
+    touched. Returns (erased, deleted).
+    """
+    if keep_days < 1:
+        raise ValueError("keep_days must be at least 1.")
+    now = utcnow()
+    not_live = or_(SOSAlert.status != "active", SOSAlert.expires_at <= now)
+
+    erased = 0
+    for alert in SOSAlert.query.filter(not_live).all():
+        if _scrub(alert):
+            erased += 1
+
+    cutoff = now - timedelta(days=keep_days)
+    deleted = SOSAlert.query.filter(not_live, SOSAlert.created_at < cutoff).delete(synchronize_session=False)
+    db.session.commit()
+    return erased, int(deleted)
 
 
 # ---------- the link and the message ----------
